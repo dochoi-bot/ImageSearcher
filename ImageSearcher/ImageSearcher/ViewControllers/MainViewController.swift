@@ -10,15 +10,19 @@ import UIKit
 final class MainViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
-    let networkService = NetworkService()
-    var welcome: Welcome? {
-        didSet {
-            
-        }
-    }
+    private var container: DIContainer!
+    private var response: Response?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        dependencyInject()
+        configureViews()
+    }
+}
+
+private extension MainViewController {
+    
+    func configureViews() {
         title = "Image Searcher"
         self.navigationItem.searchController = UISearchController()
         loadImage()
@@ -27,50 +31,69 @@ final class MainViewController: UIViewController {
         collectionView.collectionViewLayout = layout
         collectionView.delegate = self
         collectionView.dataSource = self
-        collectionView.register(ImageViewCell.self, forCellWithReuseIdentifier: "ImageViewCell")
-        // Do any additional setup after loading the view.
+        let nib = UINib(nibName: ImageThumbnailViewCell.reuseIdentifier, bundle: nil)
+        collectionView.register(nib, forCellWithReuseIdentifier: ImageThumbnailViewCell.reuseIdentifier)
     }
-}
-
-private extension MainViewController {
+    
+    func dependencyInject() {
+        let networkService = NetworkService()
+        let imageService = ImageService()
+        self.container = DIContainer(networkService: networkService, imageService: imageService)
+    }
+    
+    func showAlert(message: String) {
+        let alertController = UIAlertController(title: "Error", message: message, preferredStyle: .alert)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
     func loadImage() {
-        let endPoint = ImageEndPoint(parameter: ["query": "설현"], method: .get)
+        let endPoint = ImageEndPoint(header: ["Content-Type": "application/json", "Authorization": "KakaoAK cff5a3414b3a2d55dce43b07873577aa"], parameter: ["query": "설현"], method: .get)
         
-        networkService.request(requestType: endPoint) { [weak self] result in
+        container.networkService.request(requestType: endPoint) { [weak self] result in
+            guard let self = self else { return }
             switch result {
             case let .success(data):
-                print("success")
-                let welcome = try? JSONDecoder().decode(Welcome.self, from: data)
-                self!.welcome = welcome
-                DispatchQueue.main.async {
-                    
-                    self!.collectionView.reloadData()
+                let response = try? JSONDecoder().decode(Response.self, from: data)
+                self.response = response
+                DispatchQueue.main.async { [weak self] in
+                    self?.collectionView.reloadData()
                 }
-//                print(welcome)
                 return
             case let .failure(error):
-                print(error)
+                DispatchQueue.main.async { [weak self] in
+                    self?.showAlert(message: error.localizedDescription)
+                }
+                
             }
         }
     }
-    
 }
 
 extension MainViewController: UICollectionViewDelegateFlowLayout {
+    
     func numberOfSections(in collectionView: UICollectionView) -> Int {
         return 1
     }
 }
 
 extension MainViewController: UICollectionViewDataSource {
+    
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return welcome?.documents.count ?? 0
+        return response?.documents.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ImageViewCell", for: indexPath) as? ImageViewCell else { return UICollectionViewCell()
+        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageThumbnailViewCell.reuseIdentifier, for: indexPath) as? ImageThumbnailViewCell else { return UICollectionViewCell()
         }
-        cell.backgroundColor = .red
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self,
+                  let url = self.response?.documents[indexPath.item].thumbnailURL else { return }
+            let image = self.container.imageService.loadImage(by: url)
+            DispatchQueue.main.async {
+                cell.imageView.image = image
+            }
+        }
         return cell
     }
     

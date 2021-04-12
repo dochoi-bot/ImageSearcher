@@ -33,15 +33,18 @@ final class NetworkService: NetworkServiceProviding {
             completionHandler(.failure(.invalidURL))
             return
         }
+        
         components.queryItems = requestType.parameter.map({ (key, value)  in
             URLQueryItem(name: key, value: value)
         })
+        
         var urlRequest = URLRequest(url: components.url!)
         urlRequest.httpMethod = requestType.method.rawValue
         urlRequest.httpBody = requestType.body
-        urlRequest.setValue("application/json", forHTTPHeaderField: "Content-Type")
-        urlRequest.setValue("KakaoAK cff5a3414b3a2d55dce43b07873577aa", forHTTPHeaderField: "Authorization")
-
+        requestType.header.forEach { (key, value) in
+            urlRequest.setValue(value, forHTTPHeaderField: key)
+        }
+        
         session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
                 completionHandler(.failure(.reqeusetFailed(msg: error.localizedDescription)))

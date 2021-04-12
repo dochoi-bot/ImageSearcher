@@ -19,6 +19,7 @@ protocol RequestType {
     
     var url:URL? { get }
     var parameter: [String: String] { get }
+    var header: [String: String] { get }
     var method: RequestMethod { get }
     var body: Data? { get }
 }

@@ -8,32 +8,24 @@
 import Foundation
 
 struct ImageEndPoint: RequestType {
-    
+    var header: [String : String]
     var url: URL? = URL(string: "https://dapi.kakao.com/v2/search/image")
     var parameter: [String: String] = [:]
     var method: RequestMethod
     var body: Data?
 }
 
-// This file was generated from JSON Schema using quicktype, do not modify it directly.
-// To parse the JSON, add this file to your project and do:
-//
-//   let welcome = try? newJSONDecoder().decode(Welcome.self, from: jsonData)
-
-import Foundation
-
-// MARK: - Welcome
-struct Welcome: Codable {
+struct Response: Codable {
     let meta: Meta
     let documents: [Document]
 }
 
-// MARK: - Document
 struct Document: Codable {
     let collection: String
     let thumbnailURL: String
     let imageURL: String
-    let width, height: Int
+    let width: Int
+    let height: Int
     let displaySitename: String
     let docURL: String
     let datetime: String
@@ -49,9 +41,9 @@ struct Document: Codable {
     }
 }
 
-// MARK: - Meta
 struct Meta: Codable {
-    let totalCount, pageableCount: Int
+    let totalCount: Int
+    let pageableCount: Int
     let isEnd: Bool
 
     enum CodingKeys: String, CodingKey {
