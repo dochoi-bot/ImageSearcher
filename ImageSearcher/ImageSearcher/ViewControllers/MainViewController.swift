@@ -33,6 +33,15 @@ private extension MainViewController {
         collectionView.dataSource = self
         let nib = UINib(nibName: ImageThumbnailViewCell.reuseIdentifier, bundle: nil)
         collectionView.register(nib, forCellWithReuseIdentifier: ImageThumbnailViewCell.reuseIdentifier)
+  
+        let refreshControl = UIRefreshControl()
+        refreshControl.addTarget(self, action: #selector(refresh(refresh:)), for: .valueChanged)
+        collectionView.refreshControl = refreshControl
+    }
+    
+    @objc func refresh(refresh: UIRefreshControl) {
+        refresh.endRefreshing()
+        loadImage()
     }
     
     func dependencyInject() {
