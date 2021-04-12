@@ -10,7 +10,10 @@ import UIKit
 final class ImageThumbnailViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
-    static let reuseIdentifier: String = "ImageThumbnailViewCell"
+    @IBOutlet weak var indicator: UIActivityIndicatorView!
+    static var identifier: String {
+        return String(describing: Self.self)
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -19,5 +22,6 @@ final class ImageThumbnailViewCell: UICollectionViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil
+        indicator.startAnimating()
     }
 }
