@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		B91310BA26257EF000664D02 /* FooterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B91310B826257EF000664D02 /* FooterView.swift */; };
+		B91310BB26257EF000664D02 /* FooterView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B91310B926257EF000664D02 /* FooterView.xib */; };
 		B94D99D42622E4B600E0BF81 /* NetworkService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94D99D32622E4B600E0BF81 /* NetworkService.swift */; };
 		B94D99D72622E53500E0BF81 /* NetworkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94D99D62622E53500E0BF81 /* NetworkRequest.swift */; };
 		B94D99E32622E7F600E0BF81 /* ImageEndPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B94D99E22622E7F600E0BF81 /* ImageEndPoint.swift */; };
@@ -22,6 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B91310B826257EF000664D02 /* FooterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FooterView.swift; sourceTree = "<group>"; };
+		B91310B926257EF000664D02 /* FooterView.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FooterView.xib; sourceTree = "<group>"; };
 		B94D99D32622E4B600E0BF81 /* NetworkService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkService.swift; sourceTree = "<group>"; };
 		B94D99D62622E53500E0BF81 /* NetworkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkRequest.swift; sourceTree = "<group>"; };
 		B94D99E22622E7F600E0BF81 /* ImageEndPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageEndPoint.swift; sourceTree = "<group>"; };
@@ -137,6 +141,8 @@
 			children = (
 				B99E88C026241AC500974A55 /* ImageThumbnailViewCell.swift */,
 				B99E88C126241AC500974A55 /* ImageThumbnailViewCell.xib */,
+				B91310B826257EF000664D02 /* FooterView.swift */,
+				B91310B926257EF000664D02 /* FooterView.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -201,6 +207,7 @@
 				B95DD46626203B9000B19C6F /* LaunchScreen.storyboard in Resources */,
 				B99E88C326241AC500974A55 /* ImageThumbnailViewCell.xib in Resources */,
 				B95DD46326203B9000B19C6F /* Assets.xcassets in Resources */,
+				B91310BB26257EF000664D02 /* FooterView.xib in Resources */,
 				B95DD46126203B8F00B19C6F /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,6 +222,7 @@
 				B95DD45E26203B8F00B19C6F /* MainViewController.swift in Sources */,
 				B94D99D42622E4B600E0BF81 /* NetworkService.swift in Sources */,
 				B94D99D72622E53500E0BF81 /* NetworkRequest.swift in Sources */,
+				B91310BA26257EF000664D02 /* FooterView.swift in Sources */,
 				B95DD45A26203B8F00B19C6F /* AppDelegate.swift in Sources */,
 				B9926D1C2624872700BA66F8 /* DIContainer.swift in Sources */,
 				B94D99E32622E7F600E0BF81 /* ImageEndPoint.swift in Sources */,

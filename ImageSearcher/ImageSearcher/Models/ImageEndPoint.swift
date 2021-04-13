@@ -52,3 +52,11 @@ struct Meta: Codable {
         case isEnd = "is_end"
     }
 }
+
+struct State {
+    let totalCount: Int
+    let pageableCount: Int
+    let isEnd: Bool
+    let pageIndex: Int
+    var isPagianting = false
+}
