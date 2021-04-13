@@ -18,10 +18,10 @@ final class MainViewController: UIViewController {
     private var query: String = "" {
         didSet(oldValue) {
             timer.invalidate()
-            timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: { [weak self] _  in
+            timer = Timer.scheduledTimer(withTimeInterval: 0.3, repeats: false, block: { [weak self, query] _  in
                 guard let self = self else { return }
-                if !self.query.isEmpty {
-                    self.fetchData(query: self.query)
+                if !query.isEmpty {
+                    self.fetchData(query: query)
             } else {
                 self.documents = []
                 DispatchQueue.main.async { [weak self] in
@@ -36,6 +36,7 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         dependencyInject()
         configureViews()
+        navigationItem.hidesSearchBarWhenScrolling = false
         navigationController?.navigationBar.prefersLargeTitles = true
     }
     
@@ -43,8 +44,13 @@ final class MainViewController: UIViewController {
         super.viewDidLayoutSubviews()
         
         let layout = UICollectionViewFlowLayout()
-        layout.itemSize = .init(width: 130, height: 130)
-        layout.minimumLineSpacing = 10
+
+        layout.minimumLineSpacing = .defaultSpacing
+        layout.minimumInteritemSpacing = .defaultSpacing
+        collectionView.contentInset = .init(top: 0, left: .defaultPadding, bottom: 0, right: .defaultPadding)
+        
+        let flexibleWidth = CGFloat.flexibleWidth(minimum: 90, maximum: 130, baseWidth: collectionView.bounds.width)
+        layout.itemSize = .init(width: flexibleWidth, height: flexibleWidth)
         collectionView.collectionViewLayout = layout
     }
     
@@ -182,7 +188,8 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        guard !state.isPagianting else { return }
+        guard !state.isPagianting,
+              !query.isEmpty else { return }
         let position = scrollView.contentOffset.y
         if position > collectionView.contentSize.height  - scrollView.frame.size.height {
             state.isPagianting = true
