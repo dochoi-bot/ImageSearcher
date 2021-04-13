@@ -21,6 +21,7 @@
 		B99E88C226241AC500974A55 /* ImageThumbnailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E88C026241AC500974A55 /* ImageThumbnailViewCell.swift */; };
 		B99E88C326241AC500974A55 /* ImageThumbnailViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B99E88C126241AC500974A55 /* ImageThumbnailViewCell.xib */; };
 		B99E88C826241E2E00974A55 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E88C726241E2E00974A55 /* ImageService.swift */; };
+		B9E869242625A0AF0027521B /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E869232625A0AF0027521B /* FilterViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -40,6 +41,7 @@
 		B99E88C026241AC500974A55 /* ImageThumbnailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailViewCell.swift; sourceTree = "<group>"; };
 		B99E88C126241AC500974A55 /* ImageThumbnailViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageThumbnailViewCell.xib; sourceTree = "<group>"; };
 		B99E88C726241E2E00974A55 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		B9E869232625A0AF0027521B /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -103,6 +105,7 @@
 			isa = PBXGroup;
 			children = (
 				B95DD45D26203B8F00B19C6F /* MainViewController.swift */,
+				B9E869232625A0AF0027521B /* FilterViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				B94D99D42622E4B600E0BF81 /* NetworkService.swift in Sources */,
 				B94D99D72622E53500E0BF81 /* NetworkRequest.swift in Sources */,
 				B91310BA26257EF000664D02 /* FooterView.swift in Sources */,
+				B9E869242625A0AF0027521B /* FilterViewController.swift in Sources */,
 				B95DD45A26203B8F00B19C6F /* AppDelegate.swift in Sources */,
 				B9926D1C2624872700BA66F8 /* DIContainer.swift in Sources */,
 				B94D99E32622E7F600E0BF81 /* ImageEndPoint.swift in Sources */,

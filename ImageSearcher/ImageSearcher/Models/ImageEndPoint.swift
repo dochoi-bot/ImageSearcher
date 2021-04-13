@@ -53,7 +53,7 @@ struct Meta: Codable {
     }
 }
 
-struct State {
+struct MainViewState {
     let totalCount: Int
     let pageableCount: Int
     let isEnd: Bool

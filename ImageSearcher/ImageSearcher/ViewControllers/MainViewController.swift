@@ -12,7 +12,7 @@ final class MainViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     private var container: DIContainer!
     private var documents: [Document] = []
-    private var state: State = State(totalCount: 0, pageableCount: 0, isEnd: true, pageIndex: 0)
+    private var state: MainViewState = MainViewState(totalCount: 0, pageableCount: 0, isEnd: true, pageIndex: 0)
     private var timer = Timer()
     private var footerView: UICollectionReusableView?
     private var query: String = "" {
@@ -36,10 +36,20 @@ final class MainViewController: UIViewController {
         super.viewDidLoad()
         dependencyInject()
         configureViews()
+        navigationController?.navigationBar.prefersLargeTitles = true
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        
+        let layout = UICollectionViewFlowLayout()
+        layout.itemSize = .init(width: 130, height: 130)
+        layout.minimumLineSpacing = 10
+        collectionView.collectionViewLayout = layout
     }
     
     private func createSpinnerFooter() -> UIView {
-          let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.frame.size.width, height: 100))
+          let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 100))
           
           let spinner = UIActivityIndicatorView()
           spinner.center = footerView.center
@@ -61,10 +71,7 @@ private extension MainViewController {
         searchController.searchBar.placeholder = "Search Images"
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
-        
-        let layout = UICollectionViewFlowLayout()
-        layout.itemSize = .init(width: 80, height: 80)
-        collectionView.collectionViewLayout = layout
+    
         collectionView.delegate = self
         collectionView.dataSource = self
         
@@ -73,17 +80,6 @@ private extension MainViewController {
   
         let footerNib = UINib(nibName: FooterView.identifier, bundle: nil)
         collectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterView.identifier)
-  
-        
-        let refreshControl = UIRefreshControl()
-        refreshControl.addTarget(self, action: #selector(refresh(refresh:)), for: .valueChanged)
-        collectionView.refreshControl = refreshControl
-    }
-    
-    @objc func refresh(refresh: UIRefreshControl) {
-        refresh.endRefreshing()
-        guard !query.isEmpty else { return }
-        fetchData(query: query)
     }
     
     func dependencyInject() {
@@ -93,14 +89,12 @@ private extension MainViewController {
     }
     
     func errorHandler(message: String) {
-        showAlert(message: message)
-        
         documents = []
-        state = State(totalCount: 0, pageableCount: 0, isEnd: true, pageIndex: 1)
+        state = MainViewState(totalCount: 0, pageableCount: 0, isEnd: true, pageIndex: 1)
         self.state.isPagianting = false
         self.footerView?.isHidden = true
         self.collectionView.reloadData()
-        
+        showAlert(message: message)
     }
     
     func showAlert(message: String) {
@@ -118,7 +112,7 @@ private extension MainViewController {
             switch result {
             case let .success(data):
                 guard let response = try? JSONDecoder().decode(Response.self, from: data) else { return }
-                self.state = State(totalCount: response.meta.totalCount, pageableCount: response.meta.pageableCount, isEnd: response.meta.isEnd, pageIndex: 1)
+                self.state = MainViewState(totalCount: response.meta.totalCount, pageableCount: response.meta.pageableCount, isEnd: response.meta.isEnd, pageIndex: 1)
                 self.documents = response.documents
                 DispatchQueue.main.async { [weak self] in
                     self?.collectionView.reloadData()
@@ -141,7 +135,7 @@ private extension MainViewController {
             switch result {
             case let .success(data):
                 guard let response = try? JSONDecoder().decode(Response.self, from: data) else { return }
-                self.state = State(totalCount: response.meta.totalCount, pageableCount: response.meta.pageableCount, isEnd: response.meta.isEnd, pageIndex: self.state.pageIndex + 1)
+                self.state = MainViewState(totalCount: response.meta.totalCount, pageableCount: response.meta.pageableCount, isEnd: response.meta.isEnd, pageIndex: self.state.pageIndex + 1)
                 self.documents.append(contentsOf: response.documents)
                 DispatchQueue.main.async { [weak self] in
                     self?.collectionView.reloadData()
