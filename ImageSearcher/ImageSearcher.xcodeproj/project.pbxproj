@@ -21,8 +21,11 @@
 		B99E88C226241AC500974A55 /* ImageThumbnailViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E88C026241AC500974A55 /* ImageThumbnailViewCell.swift */; };
 		B99E88C326241AC500974A55 /* ImageThumbnailViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B99E88C126241AC500974A55 /* ImageThumbnailViewCell.xib */; };
 		B99E88C826241E2E00974A55 /* ImageService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B99E88C726241E2E00974A55 /* ImageService.swift */; };
+		B9ACA76D2626C1B40045655B /* FilterTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9ACA76B2626C1B40045655B /* FilterTableViewCell.swift */; };
+		B9ACA76E2626C1B40045655B /* FilterTableViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = B9ACA76C2626C1B40045655B /* FilterTableViewCell.xib */; };
 		B9E869242625A0AF0027521B /* FilterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E869232625A0AF0027521B /* FilterViewController.swift */; };
 		B9E869282625AD260027521B /* CGFloat+flexibleWidth.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E869272625AD260027521B /* CGFloat+flexibleWidth.swift */; };
+		B9E8692C2625B4F90027521B /* DetailImageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9E8692B2625B4F90027521B /* DetailImageViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -42,8 +45,11 @@
 		B99E88C026241AC500974A55 /* ImageThumbnailViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageThumbnailViewCell.swift; sourceTree = "<group>"; };
 		B99E88C126241AC500974A55 /* ImageThumbnailViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ImageThumbnailViewCell.xib; sourceTree = "<group>"; };
 		B99E88C726241E2E00974A55 /* ImageService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageService.swift; sourceTree = "<group>"; };
+		B9ACA76B2626C1B40045655B /* FilterTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterTableViewCell.swift; sourceTree = "<group>"; };
+		B9ACA76C2626C1B40045655B /* FilterTableViewCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = FilterTableViewCell.xib; sourceTree = "<group>"; };
 		B9E869232625A0AF0027521B /* FilterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterViewController.swift; sourceTree = "<group>"; };
 		B9E869272625AD260027521B /* CGFloat+flexibleWidth.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "CGFloat+flexibleWidth.swift"; sourceTree = "<group>"; };
+		B9E8692B2625B4F90027521B /* DetailImageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailImageViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,6 +115,7 @@
 			children = (
 				B95DD45D26203B8F00B19C6F /* MainViewController.swift */,
 				B9E869232625A0AF0027521B /* FilterViewController.swift */,
+				B9E8692B2625B4F90027521B /* DetailImageViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -149,6 +156,8 @@
 				B99E88C126241AC500974A55 /* ImageThumbnailViewCell.xib */,
 				B91310B826257EF000664D02 /* FooterView.swift */,
 				B91310B926257EF000664D02 /* FooterView.xib */,
+				B9ACA76B2626C1B40045655B /* FilterTableViewCell.swift */,
+				B9ACA76C2626C1B40045655B /* FilterTableViewCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -219,6 +228,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B95DD46626203B9000B19C6F /* LaunchScreen.storyboard in Resources */,
+				B9ACA76E2626C1B40045655B /* FilterTableViewCell.xib in Resources */,
 				B99E88C326241AC500974A55 /* ImageThumbnailViewCell.xib in Resources */,
 				B95DD46326203B9000B19C6F /* Assets.xcassets in Resources */,
 				B91310BB26257EF000664D02 /* FooterView.xib in Resources */,
@@ -235,7 +245,9 @@
 			files = (
 				B95DD45E26203B8F00B19C6F /* MainViewController.swift in Sources */,
 				B94D99D42622E4B600E0BF81 /* NetworkService.swift in Sources */,
+				B9ACA76D2626C1B40045655B /* FilterTableViewCell.swift in Sources */,
 				B94D99D72622E53500E0BF81 /* NetworkRequest.swift in Sources */,
+				B9E8692C2625B4F90027521B /* DetailImageViewController.swift in Sources */,
 				B91310BA26257EF000664D02 /* FooterView.swift in Sources */,
 				B9E869282625AD260027521B /* CGFloat+flexibleWidth.swift in Sources */,
 				B9E869242625A0AF0027521B /* FilterViewController.swift in Sources */,

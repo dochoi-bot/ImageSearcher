@@ -12,9 +12,13 @@ final class MainViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     private var container: DIContainer!
     private var documents: [Document] = []
+    private var filteredDocuments: [Document] = []
     private var state: MainViewState = MainViewState(totalCount: 0, pageableCount: 0, isEnd: true, pageIndex: 0)
     private var timer = Timer()
+    private var detailVC = DetailImageViewController()
+    private var filterVC = FilterViewController()
     private var footerView: UICollectionReusableView?
+    @IBOutlet private weak var indicator: UIActivityIndicatorView!
     private var query: String = "" {
         didSet(oldValue) {
             timer.invalidate()
@@ -28,6 +32,8 @@ final class MainViewController: UIViewController {
                     self?.collectionView.reloadData()
                 }
             }
+                self.filterVC.setOptions([])
+                self.filterVC.initSelectedIndex()
             })
         }
     }
@@ -37,7 +43,32 @@ final class MainViewController: UIViewController {
         dependencyInject()
         configureViews()
         navigationItem.hidesSearchBarWhenScrolling = false
-        navigationController?.navigationBar.prefersLargeTitles = true
+        navigationItem.rightBarButtonItem =  UIBarButtonItem(title: "filter", style: .plain, target: self, action: #selector(showFilterView))
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        if filterVC.selectedIndex != 0 {
+            filteredDocuments = documents.filter({ document -> Bool in
+                return document.collection == filterVC.seletedOption
+            })
+        }
+        collectionView.reloadData()
+    }
+    
+    @objc func showFilterView() {
+        var set: Set<String> = []
+        filterVC.setOptions(documents.filter{ document -> Bool in
+            if (set.contains(document.collection)) {
+                return false
+            }
+            set.insert(document.collection)
+            return true
+        }.map({ document -> String in
+            return document.collection
+        }))
+        
+        navigationController?.pushViewController(filterVC, animated: true)
     }
     
     override func viewDidLayoutSubviews() {
@@ -75,6 +106,7 @@ private extension MainViewController {
         searchController.searchBar.delegate = self
         searchController.delegate = self
         searchController.searchBar.placeholder = "Search Images"
+        searchController.hidesNavigationBarDuringPresentation = false
         searchController.obscuresBackgroundDuringPresentation = false
         navigationItem.searchController = searchController
     
@@ -187,9 +219,32 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 
     }
     
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        
+        DispatchQueue.global().async { [weak self] in
+            guard let self = self,
+                  indexPath.item < self.documents.count  else { return }
+            
+            let url = self.documents[indexPath.item].imageURL
+            DispatchQueue.main.async {
+                self.indicator.isHidden = false
+            }
+            if let image = self.container.imageService.loadImage(by: url) {
+                DispatchQueue.main.sync { [weak self] in
+                    defer {  self?.indicator.isHidden = true }
+                    guard let self = self else { return }
+                    self.detailVC.setImage(image: image)
+                    self.navigationController?.pushViewController(self.detailVC, animated: true)
+                }
+            }
+        }
+     
+    }
+    
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
         guard !state.isPagianting,
-              !query.isEmpty else { return }
+              !query.isEmpty,
+              filterVC.seletedOption == "all" else { return }
         let position = scrollView.contentOffset.y
         if position > collectionView.contentSize.height  - scrollView.frame.size.height {
             state.isPagianting = true
@@ -207,6 +262,9 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
 extension MainViewController: UICollectionViewDataSource {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        if filterVC.selectedIndex != 0 {
+            return filteredDocuments.count
+        }
         return documents.count
     }
     
@@ -214,12 +272,18 @@ extension MainViewController: UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ImageThumbnailViewCell.identifier, for: indexPath) as? ImageThumbnailViewCell else { return UICollectionViewCell()
         }
+        var documents: [Document] = []
         
-        DispatchQueue.global().async { [weak self] in
+        if filterVC.selectedIndex != 0 {
+            documents = filteredDocuments
+        } else {
+            documents = self.documents
+        }
+        DispatchQueue.global().async { [weak self, documents] in
             guard let self = self,
-                  indexPath.item < self.documents.count  else { return }
+                  indexPath.item < documents.count  else { return }
             
-            let url = self.documents[indexPath.item].thumbnailURL
+            let url = documents[indexPath.item].thumbnailURL
             let image = self.container.imageService.loadImage(by: url)
             DispatchQueue.main.async {
                 cell.imageView.image = image
