@@ -43,6 +43,7 @@ extension FilterViewController {
 private extension FilterViewController {
     
     func configure() {
+        title = "filter"
         view.addSubview(tableView)
         let cellNib = UINib(nibName: FilterTableViewCell.identifier, bundle: nil)
         tableView.register(cellNib, forCellReuseIdentifier: FilterTableViewCell.identifier)
