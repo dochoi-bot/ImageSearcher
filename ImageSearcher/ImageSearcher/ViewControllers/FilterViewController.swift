@@ -9,26 +9,16 @@ import UIKit
 
 final class FilterViewController: UIViewController {
 
-    private let tableView: UITableView = UITableView()
-    private var options: [String] = ["all"]
     var seletedOption: String {
         return options[selectedIndex]
     }
     private(set) var selectedIndex: Int = 0
+    private var options: [String] = ["all"]
+    private let tableView: UITableView = UITableView()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.addSubview(tableView)
-        let cellNib = UINib(nibName: FilterTableViewCell.identifier, bundle: nil)
-        tableView.register(cellNib, forCellReuseIdentifier: FilterTableViewCell.identifier)
-        
-        tableView.dataSource = self
-        tableView.allowsMultipleSelection = false
-        tableView.delegate = self
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-                                     tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-                                     tableView.topAnchor.constraint(equalTo: view.topAnchor),
-                                     tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+        configure()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -50,17 +40,28 @@ extension FilterViewController {
     }
 }
 
+private extension FilterViewController {
+    
+    func configure() {
+        view.addSubview(tableView)
+        let cellNib = UINib(nibName: FilterTableViewCell.identifier, bundle: nil)
+        tableView.register(cellNib, forCellReuseIdentifier: FilterTableViewCell.identifier)
+        
+        tableView.dataSource = self
+        tableView.allowsMultipleSelection = false
+        tableView.delegate = self
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+                                     tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+                                     tableView.topAnchor.constraint(equalTo: view.topAnchor),
+                                     tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
+    }
+}
+
 extension FilterViewController: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at: indexPath)
-//        cell?.accessoryType = .checkmark
         selectedIndex = indexPath.item
-    }
-    
-    func tableView(_ tableView: UITableView, didDeselectRowAt indexPath: IndexPath) {
-//        let cell = tableView.cellForRow(at: indexPath)
-//        cell?.accessoryType = .none
     }
 }
 

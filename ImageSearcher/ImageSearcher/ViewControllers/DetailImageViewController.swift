@@ -12,6 +12,21 @@ final class DetailImageViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        configue()
+    }
+}
+
+extension DetailImageViewController {
+    
+    func setImage(image: UIImage, contentMode: UIView.ContentMode = .scaleAspectFit) {
+        imageView.image = image
+        imageView.contentMode = contentMode
+    }
+}
+
+private extension DetailImageViewController {
+    
+    func configue() {
         view.addSubview(imageView)
         view.backgroundColor = .white
         imageView.translatesAutoresizingMaskIntoConstraints = false
@@ -19,11 +34,5 @@ final class DetailImageViewController: UIViewController {
                                      imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
                                      imageView.topAnchor.constraint(equalTo: view.topAnchor),
                                      imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)])
-        
-    }
-    
-    func setImage(image: UIImage, contentMode: UIView.ContentMode = .scaleAspectFit) {
-        imageView.image = image
-        imageView.contentMode = contentMode
     }
 }

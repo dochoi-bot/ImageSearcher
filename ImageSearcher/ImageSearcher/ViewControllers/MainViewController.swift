@@ -8,17 +8,15 @@
 import UIKit
 
 final class MainViewController: UIViewController {
-
-    @IBOutlet weak var collectionView: UICollectionView!
+    
+    @IBOutlet private weak var collectionView: UICollectionView!
+    @IBOutlet private weak var indicator: UIActivityIndicatorView!
+    private var footerView: UICollectionReusableView?
     private var container: DIContainer!
     private var documents: [Document] = []
     private var filteredDocuments: [Document] = []
     private var state: MainViewState = MainViewState(totalCount: 0, pageableCount: 0, isEnd: true, pageIndex: 0)
     private var timer = Timer()
-    private var detailVC = DetailImageViewController()
-    private var filterVC = FilterViewController()
-    private var footerView: UICollectionReusableView?
-    @IBOutlet private weak var indicator: UIActivityIndicatorView!
     private var query: String = "" {
         didSet(oldValue) {
             timer.invalidate()
@@ -26,34 +24,77 @@ final class MainViewController: UIViewController {
                 guard let self = self else { return }
                 if !query.isEmpty {
                     self.fetchData(query: query)
-            } else {
-                self.documents = []
-                DispatchQueue.main.async { [weak self] in
-                    self?.collectionView.reloadData()
+                } else {
+                    self.documents = []
+                    DispatchQueue.main.async { [weak self] in
+                        self?.collectionView.reloadData()
+                    }
                 }
-            }
                 self.filterVC.setOptions([])
                 self.filterVC.initSelectedIndex()
             })
         }
     }
+    private let detailVC = DetailImageViewController()
+    private let filterVC = FilterViewController()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dependencyInject()
-        configureViews()
-        navigationItem.hidesSearchBarWhenScrolling = false
-        navigationItem.rightBarButtonItem =  UIBarButtonItem(title: "filter", style: .plain, target: self, action: #selector(showFilterView))
+        configure()
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
-        if filterVC.selectedIndex != 0 {
+        if filterVC.seletedOption != "all" {
             filteredDocuments = documents.filter({ document -> Bool in
                 return document.collection == filterVC.seletedOption
             })
         }
         collectionView.reloadData()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        configureLayout()
+    }
+}
+
+private extension MainViewController {
+    
+    func configure() {
+        title = "Image Searcher"
+        let searchController = UISearchController()
+        
+        searchController.searchBar.delegate = self
+        searchController.delegate = self
+        searchController.searchBar.placeholder = "Search Images"
+        searchController.hidesNavigationBarDuringPresentation = false
+        searchController.obscuresBackgroundDuringPresentation = false
+        navigationItem.searchController = searchController
+        navigationItem.hidesSearchBarWhenScrolling = false
+        navigationItem.rightBarButtonItem =  UIBarButtonItem(title: "filter", style: .plain, target: self, action: #selector(showFilterView))
+        
+        collectionView.delegate = self
+        collectionView.dataSource = self
+        
+        let cellNib = UINib(nibName: ImageThumbnailViewCell.identifier, bundle: nil)
+        collectionView.register(cellNib, forCellWithReuseIdentifier: ImageThumbnailViewCell.identifier)
+        
+        let footerNib = UINib(nibName: FooterView.identifier, bundle: nil)
+        collectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterView.identifier)
+    }
+    
+    func configureLayout() {
+        let layout = UICollectionViewFlowLayout()
+        
+        layout.minimumLineSpacing = .defaultSpacing
+        layout.minimumInteritemSpacing = .defaultSpacing
+        collectionView.contentInset = .init(top: 0, left: .defaultPadding, bottom: 0, right: .defaultPadding)
+        
+        let flexibleWidth = CGFloat.flexibleWidth(minimum: 90, maximum: 130, baseWidth: collectionView.bounds.width)
+        layout.itemSize = .init(width: flexibleWidth, height: flexibleWidth)
+        collectionView.collectionViewLayout = layout
     }
     
     @objc func showFilterView() {
@@ -69,55 +110,6 @@ final class MainViewController: UIViewController {
         }))
         
         navigationController?.pushViewController(filterVC, animated: true)
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        
-        let layout = UICollectionViewFlowLayout()
-
-        layout.minimumLineSpacing = .defaultSpacing
-        layout.minimumInteritemSpacing = .defaultSpacing
-        collectionView.contentInset = .init(top: 0, left: .defaultPadding, bottom: 0, right: .defaultPadding)
-        
-        let flexibleWidth = CGFloat.flexibleWidth(minimum: 90, maximum: 130, baseWidth: collectionView.bounds.width)
-        layout.itemSize = .init(width: flexibleWidth, height: flexibleWidth)
-        collectionView.collectionViewLayout = layout
-    }
-    
-    private func createSpinnerFooter() -> UIView {
-          let footerView = UIView(frame: CGRect(x: 0, y: 0, width: view.bounds.size.width, height: 100))
-          
-          let spinner = UIActivityIndicatorView()
-          spinner.center = footerView.center
-          footerView.addSubview(spinner)
-          spinner.startAnimating()
-          
-          return footerView
-      }
-}
-
-private extension MainViewController {
-    
-    func configureViews() {
-        title = "Image Searcher"
-        let searchController = UISearchController()
-     
-        searchController.searchBar.delegate = self
-        searchController.delegate = self
-        searchController.searchBar.placeholder = "Search Images"
-        searchController.hidesNavigationBarDuringPresentation = false
-        searchController.obscuresBackgroundDuringPresentation = false
-        navigationItem.searchController = searchController
-    
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        let cellNib = UINib(nibName: ImageThumbnailViewCell.identifier, bundle: nil)
-        collectionView.register(cellNib, forCellWithReuseIdentifier: ImageThumbnailViewCell.identifier)
-  
-        let footerNib = UINib(nibName: FooterView.identifier, bundle: nil)
-        collectionView.register(footerNib, forSupplementaryViewOfKind: UICollectionView.elementKindSectionFooter, withReuseIdentifier: FooterView.identifier)
     }
     
     func dependencyInject() {
@@ -200,6 +192,7 @@ extension MainViewController: UISearchBarDelegate {
 }
 
 extension MainViewController: UISearchControllerDelegate {
+    
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
         query.removeAll()
     }
@@ -215,8 +208,8 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
         let footerView = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: FooterView.identifier, for: indexPath)
         footerView.isHidden = true
         self.footerView = footerView
-          return footerView
-
+        return footerView
+        
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
@@ -229,16 +222,20 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
             DispatchQueue.main.async {
                 self.indicator.isHidden = false
             }
-            if let image = self.container.imageService.loadImage(by: url) {
+            self.container.imageService.loadImage(by: url) { result in
                 DispatchQueue.main.sync { [weak self] in
-                    defer {  self?.indicator.isHidden = true }
                     guard let self = self else { return }
-                    self.detailVC.setImage(image: image)
-                    self.navigationController?.pushViewController(self.detailVC, animated: true)
+                    defer {  self.indicator.isHidden = true }
+                    switch result {
+                    case let .success(image):
+                        self.detailVC.setImage(image: image)
+                        self.navigationController?.pushViewController(self.detailVC, animated: true)
+                    case let .failure(error):
+                        self.showAlert(message: error.localizedDescription)
+                    }
                 }
             }
         }
-     
     }
     
     func scrollViewDidScroll(_ scrollView: UIScrollView) {
@@ -255,8 +252,8 @@ extension MainViewController: UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         return CGSize(width: collectionView.bounds.width, height: 100.0)
- }
-
+    }
+    
 }
 
 extension MainViewController: UICollectionViewDataSource {
@@ -284,10 +281,16 @@ extension MainViewController: UICollectionViewDataSource {
                   indexPath.item < documents.count  else { return }
             
             let url = documents[indexPath.item].thumbnailURL
-            let image = self.container.imageService.loadImage(by: url)
-            DispatchQueue.main.async {
-                cell.imageView.image = image
+            self.container.imageService.loadImage(by: url) { result in
+                DispatchQueue.main.async {
+                switch result {
+                case let .success(image):
+                    cell.imageView.image = image
+                case .failure(_):
+                    cell.imageView.backgroundColor = .black
+                }
                 cell.indicator.stopAnimating()
+                }
             }
         }
         return cell

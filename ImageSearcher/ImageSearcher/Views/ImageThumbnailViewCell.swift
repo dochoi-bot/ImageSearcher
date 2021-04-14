@@ -11,6 +11,7 @@ final class ImageThumbnailViewCell: UICollectionViewCell {
 
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var indicator: UIActivityIndicatorView!
+    
     static var identifier: String {
         return String(describing: Self.self)
     }
@@ -18,7 +19,7 @@ final class ImageThumbnailViewCell: UICollectionViewCell {
     override func awakeFromNib() {
         super.awakeFromNib()
     }
-    
+
     override func prepareForReuse() {
         super.prepareForReuse()
         imageView.image = nil

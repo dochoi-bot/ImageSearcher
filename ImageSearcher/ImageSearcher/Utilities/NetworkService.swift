@@ -14,7 +14,7 @@ protocol NetworkServiceProviding {
 
 enum NetworkError: Error {
     case invalidURL
-    case reqeusetFailed(msg: String)
+    case reqeustFailed(msg: String)
     case invalidResponse(msg: String)
     case invalidData
 }
@@ -47,7 +47,7 @@ final class NetworkService: NetworkServiceProviding {
         
         session.dataTask(with: urlRequest) { (data, response, error) in
             if let error = error {
-                completionHandler(.failure(.reqeusetFailed(msg: error.localizedDescription)))
+                completionHandler(.failure(.reqeustFailed(msg: error.localizedDescription)))
                 return
             }
             if let response = response as? HTTPURLResponse,
