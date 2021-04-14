@@ -27,6 +27,7 @@
 ### 특징
 
 - 무한 스크롤 기능
+
 ![ezgif com-gif-maker (51)](https://user-images.githubusercontent.com/54564170/114678378-22ad8200-9d46-11eb-9d33-9e9b64871977.gif)
 
 - 모든 화면 지원
