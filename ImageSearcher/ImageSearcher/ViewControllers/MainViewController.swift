@@ -141,7 +141,7 @@ private extension MainViewController {
             guard let self = self else { return }
             switch result {
             case let .success(data):
-                guard let response = try? JSONDecoder().decode(Response.self, from: data) else { return }
+                guard let response = try? JSONDecoder().decode(APIResponse.self, from: data) else { return }
                 self.state = MainViewState(totalCount: response.meta.totalCount, pageableCount: response.meta.pageableCount, isEnd: response.meta.isEnd, pageIndex: 1)
                 self.documents = response.documents
                 DispatchQueue.main.async { [weak self] in
@@ -164,7 +164,7 @@ private extension MainViewController {
             guard let self = self else { return }
             switch result {
             case let .success(data):
-                guard let response = try? JSONDecoder().decode(Response.self, from: data) else { return }
+                guard let response = try? JSONDecoder().decode(APIResponse.self, from: data) else { return }
                 self.state = MainViewState(totalCount: response.meta.totalCount, pageableCount: response.meta.pageableCount, isEnd: response.meta.isEnd, pageIndex: self.state.pageIndex + 1)
                 self.documents.append(contentsOf: response.documents)
                 DispatchQueue.main.async { [weak self] in
