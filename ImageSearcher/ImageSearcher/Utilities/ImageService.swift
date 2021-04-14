@@ -8,6 +8,7 @@
 import UIKit
 
 enum ImageError: Error {
+    
     case invalidImage
 }
 

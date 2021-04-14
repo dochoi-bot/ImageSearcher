@@ -8,11 +8,13 @@
 import Foundation
 
 protocol NetworkServiceProviding {
+    
     func request(requestType: RequestType,
                  completionHandler: @escaping (Result<Data, NetworkError>) -> Void)
 }
 
 enum NetworkError: Error {
+    
     case invalidURL
     case reqeustFailed(msg: String)
     case invalidResponse(msg: String)

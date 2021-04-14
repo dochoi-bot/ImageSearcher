@@ -8,11 +8,13 @@
 import Foundation
 
 struct APIResponse: Codable {
+    
     let meta: Meta
     let documents: [Document]
 }
 
 struct Document: Codable {
+    
     let collection: String
     let thumbnailURL: String
     let imageURL: String
@@ -23,6 +25,7 @@ struct Document: Codable {
     let datetime: String
 
     enum CodingKeys: String, CodingKey {
+        
         case collection
         case thumbnailURL = "thumbnail_url"
         case imageURL = "image_url"
@@ -34,6 +37,7 @@ struct Document: Codable {
 }
 
 struct Meta: Codable {
+    
     let totalCount: Int
     let pageableCount: Int
     let isEnd: Bool

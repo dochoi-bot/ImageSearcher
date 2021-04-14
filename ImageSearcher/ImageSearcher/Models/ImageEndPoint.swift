@@ -8,6 +8,7 @@
 import Foundation
 
 struct ImageEndPoint: RequestType {
+    
     var header: [String : String]
     var url: URL? = URL(string: "https://dapi.kakao.com/v2/search/image")
     var parameter: [String: String] = [:]

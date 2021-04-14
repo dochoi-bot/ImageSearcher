@@ -8,6 +8,7 @@
 import UIKit
 
 final class DetailImageViewController: UIViewController {
+    
     private let imageView: UIImageView = UIImageView()
     
     override func viewDidLoad() {
